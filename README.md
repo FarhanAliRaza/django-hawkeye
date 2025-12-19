@@ -1,20 +1,24 @@
-# django-pg-textsearch
+# django-hawkeye 🎯
 
-Django integration for [pg_textsearch](https://github.com/timescale/pg_textsearch) - BM25 full-text search for PostgreSQL.
+Django BM25 full-text search using PostgreSQL [pg_textsearch](https://github.com/paradedb/pg_textsearch) - a lightweight Elasticsearch alternative.
+
+## Features
+
+- **Simple API** - Just add a mixin and search with `Article.search("query")`
+- **BM25 ranking** - Industry-standard relevance scoring (same as Elasticsearch)
+- **No external services** - Uses PostgreSQL 17+ native search
 
 ## Requirements
 
 - PostgreSQL 17+
 - pg_textsearch extension
-- Django 5.0+
+- Django 4.2+
 - Python 3.10+
 
 ## Installation
 
 ```bash
-uv add django-pg-textsearch
-# or
-pip install django-pg-textsearch
+pip install django-hawkeye
 ```
 
 Add to `INSTALLED_APPS`:
@@ -22,31 +26,21 @@ Add to `INSTALLED_APPS`:
 ```python
 INSTALLED_APPS = [
     ...
-    'django_pg_textsearch',
+    'django_hawkeye',
 ]
 ```
 
 ## Quick Start
 
-### 1. Run migrations
-
-The extension is installed automatically when you run migrations:
-
-```bash
-python manage.py migrate
-```
-
-### 2. Define your model with BM25 index
+### 1. Define your model
 
 ```python
 from django.db import models
-from django_pg_textsearch import BM25Index, BM25SearchManager
+from django_hawkeye import BM25Index, BM25Searchable
 
-class Article(models.Model):
+class Article(BM25Searchable, models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField()
-
-    objects = BM25SearchManager()
 
     class Meta:
         indexes = [
@@ -54,35 +48,36 @@ class Article(models.Model):
         ]
 ```
 
+### 2. Run migrations
+
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
 ### 3. Search
 
 ```python
-# BM25 search - scores are NEGATIVE (lower = better match)
-results = Article.objects.bm25_search('django tutorial', 'content')
+# Basic search
+Article.search("django tutorial")
 
-# With limit
-results = Article.objects.bm25_search('web framework', 'content', limit=10)
+# With filters
+Article.search("web framework").filter(published=True)[:10]
 
-# Filter by score threshold
-results = Article.objects.bm25_filter(
-    'django tutorial',
-    'content',
-    'article_bm25_idx',  # index name required
-    threshold=-1.0
-)
-```
-
-### Manual scoring
-
-```python
-from django_pg_textsearch import BM25Score
-
-Article.objects.annotate(
-    score=BM25Score('content', 'search query')
-).order_by('score')  # ASC because lower = better!
+# With score threshold (lower = better match)
+Article.search("django").filter(bm25_score__lt=-1.0)
 ```
 
 ## API
+
+### BM25Searchable Mixin
+
+Add to any model to enable `.search()` method:
+
+```python
+class Article(BM25Searchable, models.Model):
+    ...
+```
 
 ### BM25Index
 
@@ -96,35 +91,116 @@ BM25Index(
 )
 ```
 
-### Manager Methods
+### Search Methods
 
-| Method | Description |
-|--------|-------------|
-| `bm25_search(query, field, index_name=None, limit=None)` | Rank all documents by BM25 score |
-| `bm25_filter(query, field, index_name, threshold=-1.0)` | Filter to only matching documents |
+```python
+# Basic search - returns BM25SearchQuerySet
+Article.search("query")
 
-**Note:** `bm25_search` returns ALL documents ordered by relevance (non-matches get score 0). Use `bm25_filter` with a threshold to exclude non-matching documents, or use `limit` to get only top results.
+# Chainable with Django QuerySet methods
+Article.search("query").filter(author="John")
+Article.search("query").exclude(draft=True)
+Article.search("query").select_related('author')
+Article.search("query")[:10]  # Limit results
 
-### Expressions
+# Filter by score threshold
+Article.search("query").filter(bm25_score__lt=-1.0)
+```
 
-| Expression | Description |
-|------------|-------------|
-| `BM25Score(field, query)` | Annotate with BM25 score |
-| `BM25Query(query, index_name=None)` | Create a BM25 query |
-| `BM25Match(field, query, index_name, threshold)` | Filter expression |
+## Advanced Usage
+
+### Override search() method
+
+```python
+class Article(BM25Searchable, models.Model):
+    title = models.CharField(max_length=255)
+    content = models.TextField()
+
+    class Meta:
+        indexes = [
+            BM25Index(fields=['content'], name='article_bm25_idx'),
+        ]
+
+    @classmethod
+    def search(cls, query, include_title=False):
+        """Custom search with optional title filtering."""
+        results = super().search(query)
+        if include_title:
+            results = results.filter(title__icontains=query)
+        return results
+```
+
+### Direct Expression API
+
+Use `BM25Score` for full control:
+
+```python
+from django_hawkeye import BM25Score
+
+# Manual annotation
+Article.objects.annotate(
+    score=BM25Score('content', 'search query', index_name='article_bm25_idx')
+).order_by('score')
+
+# Multi-field weighted search
+from django.db.models import F
+
+Article.objects.annotate(
+    title_score=BM25Score('title', query, index_name='title_idx'),
+    content_score=BM25Score('content', query, index_name='content_idx'),
+).annotate(
+    combined=F('title_score') * 2 + F('content_score')
+).order_by('combined')
+```
+
+### Without Mixin
+
+```python
+from django_hawkeye import BM25Index, BM25Score
+
+class Article(models.Model):
+    content = models.TextField()
+
+    class Meta:
+        indexes = [
+            BM25Index(fields=['content'], name='article_bm25_idx'),
+        ]
+
+    @classmethod
+    def search(cls, query):
+        return cls.objects.annotate(
+            score=BM25Score('content', query, index_name='article_bm25_idx')
+        ).filter(score__lt=0).order_by('score')
+```
 
 ## Score Semantics
 
 **pg_textsearch returns NEGATIVE scores.** Lower values = better match.
 
 ```python
-# Correct - ascending order
-.order_by('score')
+# Correct - ascending order (best matches first)
+Article.search("query")  # Already ordered correctly
 
-# Wrong - would put worst matches first
-.order_by('-score')
+# Manual ordering
+.order_by('bm25_score')  # ✓ Correct
+.order_by('-bm25_score') # ✗ Wrong - worst matches first
 ```
+
+## Why Hawkeye?
+
+| Feature        | Elasticsearch     | django-hawkeye      |
+| -------------- | ----------------- | ------------------- |
+| Infrastructure | Separate cluster  | Your PostgreSQL     |
+| Sync           | Manual index sync | Automatic (native)  |
+| Cost           | $$$               | Free                |
+| Setup          | Complex           | Add mixin + migrate |
+| BM25 ranking   | ✓                 | ✓                   |
 
 ## License
 
 MIT
+
+## Links
+
+- [pg_textsearch](https://github.com/timescale/pg_textsearch) - The PostgreSQL extension
+- [BM25 Algorithm](https://en.wikipedia.org/wiki/Okapi_BM25) - How ranking works
