@@ -3,7 +3,7 @@
 
 from django.db import migrations, models
 
-import django_pg_textsearch.indexes
+import django_hawkeye.indexes
 
 
 class Migration(migrations.Migration):
@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 "indexes": [
-                    django_pg_textsearch.indexes.BM25Index(
+                    django_hawkeye.indexes.BM25Index(
                         fields=["content"], name="article_content_bm25"
                     )
                 ],

@@ -1,6 +1,6 @@
 from django.db import models
 
-from django_pg_textsearch import BM25Index, BM25Searchable
+from django_hawkeye import BM25Index, BM25Searchable
 
 
 class Article(BM25Searchable, models.Model):

@@ -2,7 +2,7 @@
 Unit tests for operations module.
 """
 
-from django_pg_textsearch.operations import (
+from django_hawkeye.operations import (
     CreateBM25Index,
     CreateExtension,
     CreatePgTextsearchExtension,

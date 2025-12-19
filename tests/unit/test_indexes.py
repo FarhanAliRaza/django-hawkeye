@@ -2,7 +2,7 @@
 Unit tests for indexes module.
 """
 
-from django_pg_textsearch.indexes import BM25Index
+from django_hawkeye.indexes import BM25Index
 
 
 class TestBM25Index:

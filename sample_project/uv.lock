@@ -53,7 +53,7 @@ wheels = [
 ]
 
 [[package]]
-name = "django-pg-textsearch"
+name = "django-hawkeye"
 version = "0.1.0"
 source = { editable = "../" }
 dependencies = [
@@ -161,14 +161,14 @@ source = { virtual = "." }
 dependencies = [
     { name = "django", version = "5.2.9", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
     { name = "django", version = "6.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
-    { name = "django-pg-textsearch" },
+    { name = "django-hawkeye" },
     { name = "psycopg", extra = ["binary"] },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "django", specifier = ">=5.0" },
-    { name = "django-pg-textsearch", editable = "../" },
+    { name = "django-hawkeye", editable = "../" },
     { name = "psycopg", extras = ["binary"], specifier = ">=3.0" },
 ]
 

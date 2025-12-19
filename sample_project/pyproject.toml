@@ -1,17 +1,17 @@
 [project]
 name = "sample-project"
 version = "0.1.0"
-description = "Sample Django project demonstrating django-pg-textsearch"
+description = "Sample Django project demonstrating django-hawkeye"
 requires-python = ">=3.10"
 
 dependencies = [
     "django>=5.0",
     "psycopg[binary]>=3.0",
-    "django-pg-textsearch",
+    "django-hawkeye",
 ]
 
 [tool.uv.sources]
-django-pg-textsearch = { path = "../", editable = true }
+django-hawkeye = { path = "../", editable = true }
 
 [tool.uv]
 package = false

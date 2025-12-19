@@ -1,12 +1,12 @@
 [project]
-name = "django-pg-textsearch"
+name = "django-hawkeye"
 version = "0.1.0"
-description = "Django integration for PostgreSQL BM25 full-text search using pg_textsearch extension"
+description = "Django-hawkeye full-text search using PostgreSQL pg_textsearch - a lightweight Elasticsearch alternative"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
 authors = [
-    {name = "Your Name", email = "your@email.com"}
+    {name = "Farhan Ali Raza", email = "farhanaliraza@gmail.com"}
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -23,7 +23,7 @@ classifiers = [
     "Topic :: Database",
     "Topic :: Text Processing :: Indexing",
 ]
-keywords = ["django", "postgresql", "bm25", "full-text-search", "search"]
+keywords = ["django", "postgresql", "bm25", "full-text-search", "search", "elasticsearch-alternative"]
 
 dependencies = [
     "django>=4.2",
@@ -40,16 +40,16 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/yourusername/django-pg-textsearch"
-Documentation = "https://github.com/yourusername/django-pg-textsearch#readme"
-Repository = "https://github.com/yourusername/django-pg-textsearch"
+Homepage = "https://github.com/FarhanAliRaza/django-hawkeye"
+Documentation = "https://github.com/FarhanAliRaza/django-hawkeye#readme"
+Repository = "https://github.com/FarhanAliRaza/django-hawkeye"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/django_pg_textsearch"]
+packages = ["src/django_hawkeye"]
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "tests.settings"

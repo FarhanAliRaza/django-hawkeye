@@ -35,7 +35,7 @@ class TestCreateExtensionOperation:
 
     def test_create_extension_executes(self):
         """Test extension creation doesn't error."""
-        from django_pg_textsearch.operations import CreateExtension
+        from django_hawkeye.operations import CreateExtension
 
         # Try to create a common extension that exists
         op = CreateExtension("plpgsql")

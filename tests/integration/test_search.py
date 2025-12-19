@@ -6,7 +6,7 @@ Requires PostgreSQL 17+ with pg_textsearch extension.
 import pytest
 from django.db import connection
 
-from django_pg_textsearch import BM25Score
+from django_hawkeye import BM25Score
 from tests.models import Article
 
 

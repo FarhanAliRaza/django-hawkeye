@@ -3,7 +3,7 @@ Unit tests for expressions module.
 Tests only pg_textsearch specific expressions.
 """
 
-from django_pg_textsearch.expressions import (
+from django_hawkeye.expressions import (
     BM25Match,
     BM25Query,
     BM25Score,

@@ -11,14 +11,14 @@ DEBUG = True
 INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.auth",
-    "django_pg_textsearch",
+    "django_hawkeye",
     "tests",
 ]
 
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("POSTGRES_DB", "django_pg_textsearch_test"),
+        "NAME": os.environ.get("POSTGRES_DB", "django_hawkeye_test"),
         "USER": os.environ.get("POSTGRES_USER", "postgres"),
         "PASSWORD": os.environ.get("POSTGRES_PASSWORD", "postgres"),
         "HOST": os.environ.get("POSTGRES_HOST", "localhost"),

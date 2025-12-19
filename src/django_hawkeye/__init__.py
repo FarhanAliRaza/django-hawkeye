@@ -1,5 +1,5 @@
 """
-django-pg-textsearch
+django-hawkeye
 ====================
 
 Django integration for PostgreSQL BM25 full-text search using pg_textsearch extension.
@@ -9,7 +9,7 @@ Requirements:
     - pg_textsearch extension (https://github.com/paradedb/pg_textsearch)
 
 Installation:
-    pip install django-pg-textsearch
+    pip install django-hawkeye
 
 Links:
     - GitHub: https://github.com/paradedb/pg_textsearch
@@ -21,7 +21,7 @@ Basic Usage
 
 1. Add the mixin and index to your model::
 
-    from django_pg_textsearch import BM25Index, BM25Searchable
+    from django_hawkeye import BM25Index, BM25Searchable
 
     class Article(BM25Searchable, models.Model):
         title = models.CharField(max_length=255)
@@ -75,7 +75,7 @@ Override search() method::
 
 Direct Expression API::
 
-    from django_pg_textsearch import BM25Score
+    from django_hawkeye import BM25Score
 
     # Manual annotation and ordering
     Article.objects.annotate(
@@ -93,7 +93,7 @@ Direct Expression API::
 Multi-field weighted search::
 
     from django.db.models import F
-    from django_pg_textsearch import BM25Score
+    from django_hawkeye import BM25Score
 
     Article.objects.annotate(
         title_score=BM25Score('title', query, index_name='title_idx'),
@@ -104,7 +104,7 @@ Multi-field weighted search::
 
 Without mixin (expressions only)::
 
-    from django_pg_textsearch import BM25Index, BM25Score
+    from django_hawkeye import BM25Index, BM25Score
 
     class Article(models.Model):
         content = models.TextField()
@@ -188,4 +188,4 @@ __all__ = [
     "is_pg_textsearch_available",
 ]
 
-default_app_config = "django_pg_textsearch.apps.DjangoPgTextsearchConfig"
+default_app_config = "django_hawkeye.apps.DjangoHawkeyeConfig"

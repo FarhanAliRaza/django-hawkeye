@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # Third party
-    "django_pg_textsearch",
+    "django_hawkeye",
     # Local
     "article",
 ]

@@ -14,7 +14,7 @@ def check_postgresql_version(app_configs, **kwargs):
             Error(
                 "django-pg-textsearch requires PostgreSQL",
                 hint=f"You are using {connection.vendor}. Switch to PostgreSQL 17+.",
-                id="django_pg_textsearch.E001",
+                id="django_hawkeye.E001",
             )
         )
         return errors
@@ -35,14 +35,14 @@ def check_postgresql_version(app_configs, **kwargs):
                         Error(
                             f"PostgreSQL version {major_version} is not supported",
                             hint="pg_textsearch requires PostgreSQL 17 or later.",
-                            id="django_pg_textsearch.E002",
+                            id="django_hawkeye.E002",
                         )
                     )
     except Exception as e:
         errors.append(
             Warning(
                 f"Could not determine PostgreSQL version: {e}",
-                id="django_pg_textsearch.W001",
+                id="django_hawkeye.W001",
             )
         )
 
@@ -78,14 +78,14 @@ def check_pg_textsearch_extension(app_configs, **kwargs):
                             "Install pg_textsearch extension: CREATE EXTENSION pg_textsearch; "
                             "or use the CreatePgTextsearchExtension migration operation."
                         ),
-                        id="django_pg_textsearch.E003",
+                        id="django_hawkeye.E003",
                     )
                 )
     except Exception as e:
         errors.append(
             Warning(
                 f"Could not check pg_textsearch extension: {e}",
-                id="django_pg_textsearch.W002",
+                id="django_hawkeye.W002",
             )
         )
 
