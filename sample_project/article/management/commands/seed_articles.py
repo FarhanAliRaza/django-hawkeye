@@ -1,7 +1,7 @@
+# ruff: noqa: E501
 from django.core.management.base import BaseCommand
 
 from article.models import Article
-
 
 # Realistic content for Elasticsearch replacement demo
 # Common use cases: e-commerce, documentation, support tickets, blog posts

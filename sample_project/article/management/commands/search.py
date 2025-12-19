@@ -8,9 +8,7 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument("query", type=str, help="Search query")
-        parser.add_argument(
-            "--limit", type=int, default=5, help="Maximum number of results"
-        )
+        parser.add_argument("--limit", type=int, default=5, help="Maximum number of results")
         parser.add_argument(
             "--threshold",
             type=float,

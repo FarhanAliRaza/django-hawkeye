@@ -36,8 +36,7 @@ class BM25Searchable:
             if isinstance(index, BM25Index):
                 return index
         raise ValueError(
-            f"No BM25Index found on {cls.__name__}. "
-            f"Add BM25Index to Meta.indexes."
+            f"No BM25Index found on {cls.__name__}. Add BM25Index to Meta.indexes."
         )
 
     @classmethod
