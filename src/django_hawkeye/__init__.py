@@ -189,5 +189,3 @@ __all__ = [
     "get_postgresql_version",
     "is_pg_textsearch_available",
 ]
-
-default_app_config = "django_hawkeye.apps.DjangoHawkeyeConfig"

@@ -35,9 +35,7 @@ class BM25Searchable:
         for index in cls._meta.indexes:
             if isinstance(index, BM25Index):
                 return index
-        raise ValueError(
-            f"No BM25Index found on {cls.__name__}. Add BM25Index to Meta.indexes."
-        )
+        raise ValueError(f"No BM25Index found on {cls.__name__}. Add BM25Index to Meta.indexes.")
 
     @classmethod
     def search(cls, query):

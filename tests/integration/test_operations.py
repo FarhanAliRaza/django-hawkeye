@@ -80,9 +80,7 @@ class TestPgTextsearchExtension:
     def test_to_bm25query_function_exists(self):
         """Test to_bm25query function exists."""
         with connection.cursor() as cursor:
-            cursor.execute(
-                "SELECT EXISTS (SELECT 1 FROM pg_proc WHERE proname = 'to_bm25query')"
-            )
+            cursor.execute("SELECT EXISTS (SELECT 1 FROM pg_proc WHERE proname = 'to_bm25query')")
             exists = cursor.fetchone()[0]
 
         assert exists, "to_bm25query function not available"

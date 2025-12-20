@@ -12,3 +12,4 @@ wheels/
 /ignore/
 
 **/uv.lock
+.python-version

@@ -69,9 +69,7 @@ class BM25Index(Index):
         schema_editor.execute("CREATE EXTENSION IF NOT EXISTS pg_textsearch")
 
         table = model._meta.db_table
-        columns = [
-            model._meta.get_field(field_name).column for field_name in self.fields
-        ]
+        columns = [model._meta.get_field(field_name).column for field_name in self.fields]
 
         # pg_textsearch expects raw column names
         columns_sql = ", ".join(schema_editor.quote_name(col) for col in columns)

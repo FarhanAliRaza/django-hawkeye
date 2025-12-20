@@ -29,9 +29,7 @@ class CreateExtension(Operation):
 
         schema_clause = f" SCHEMA {self.schema}" if self.schema else ""
         try:
-            schema_editor.execute(
-                f"CREATE EXTENSION IF NOT EXISTS {self.name}{schema_clause}"
-            )
+            schema_editor.execute(f"CREATE EXTENSION IF NOT EXISTS {self.name}{schema_clause}")
         except ProgrammingError as e:
             # Extension not available on server - warn but don't fail
             warnings.warn(
@@ -151,9 +149,7 @@ class CreateBM25Index(Operation):
         if schema_editor.connection.vendor != "postgresql":
             return
 
-        schema_editor.execute(
-            f"DROP INDEX IF EXISTS {schema_editor.quote_name(self.name)}"
-        )
+        schema_editor.execute(f"DROP INDEX IF EXISTS {schema_editor.quote_name(self.name)}")
 
     def describe(self):
         return f"Create BM25 index {self.name} on {self.model_name}"
